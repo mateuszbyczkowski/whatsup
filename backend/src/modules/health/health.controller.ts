@@ -13,7 +13,6 @@ import {
 import {
   HealthCheckService,
   HealthCheck,
-  TypeOrmHealthIndicator,
   MemoryHealthIndicator,
   DiskHealthIndicator,
 } from '@nestjs/terminus';
