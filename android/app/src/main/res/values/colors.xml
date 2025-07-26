@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material 3 Light Theme Colors -->
+    <color name="md_theme_light_primary">#1B5E20</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#A5D6A7</color>
+    <color name="md_theme_light_onPrimaryContainer">#003300</color>
+    <color name="md_theme_light_secondary">#526E2D</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#D5F2A5</color>
+    <color name="md_theme_light_onSecondaryContainer">#131F00</color>
+    <color name="md_theme_light_tertiary">#39656B</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiaryContainer">#BCF1F2</color>
+    <color name="md_theme_light_onTertiaryContainer">#001F21</color>
+    <color name="md_theme_light_error">#B3261E</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_errorContainer">#F9DEDC</color>
+    <color name="md_theme_light_onErrorContainer">#410E0B</color>
+    <color name="md_theme_light_background">#FFFBFF</color>
+    <color name="md_theme_light_onBackground">#1C1B1F</color>
+    <color name="md_theme_light_surface">#FFFBFF</color>
+    <color name="md_theme_light_onSurface">#1C1B1F</color>
+    <color name="md_theme_light_surfaceVariant">#E7E0EC</color>
+    <color name="md_theme_light_onSurfaceVariant">#49454F</color>
+    <color name="md_theme_light_outline">#79747E</color>
+    <color name="md_theme_light_inverseOnSurface">#F4EFF4</color>
+    <color name="md_theme_light_inverseSurface">#313033</color>
+    <color name="md_theme_light_inversePrimary">#4CAF50</color>
+
+    <!-- Material 3 Dark Theme Colors -->
+    <color name="md_theme_dark_primary">#4CAF50</color>
+    <color name="md_theme_dark_onPrimary">#003300</color>
+    <color name="md_theme_dark_primaryContainer">#388E3C</color>
+    <color name="md_theme_dark_onPrimaryContainer">#A5D6A7</color>
+    <color name="md_theme_dark_secondary">#B9C689</color>
+    <color name="md_theme_dark_onSecondary">#252F04</color>
+    <color name="md_theme_dark_secondaryContainer">#3B4719</color>
+    <color name="md_theme_dark_onSecondaryContainer">#D5F2A5</color>
+    <color name="md_theme_dark_tertiary">#A1D5D6</color>
+    <color name="md_theme_dark_onTertiary">#013638</color>
+    <color name="md_theme_dark_tertiaryContainer">#1E4D52</color>
+    <color name="md_theme_dark_onTertiaryContainer">#BCF1F2</color>
+    <color name="md_theme_dark_error">#F2B8B5</color>
+    <color name="md_theme_dark_onError">#601410</color>
+    <color name="md_theme_dark_errorContainer">#8C1D18</color>
+    <color name="md_theme_dark_onErrorContainer">#F9DEDC</color>
+    <color name="md_theme_dark_background">#1C1B1F</color>
+    <color name="md_theme_dark_onBackground">#E6E1E5</color>
+    <color name="md_theme_dark_surface">#1C1B1F</color>
+    <color name="md_theme_dark_onSurface">#E6E1E5</color>
+    <color name="md_theme_dark_surfaceVariant">#49454F</color>
+    <color name="md_theme_dark_onSurfaceVariant">#CAC4D0</color>
+    <color name="md_theme_dark_outline">#938F99</color>
+    <color name="md_theme_dark_inverseOnSurface">#1C1B1F</color>
+    <color name="md_theme_dark_inverseSurface">#E6E1E5</color>
+    <color name="md_theme_dark_inversePrimary">#1B5E20</color>
+
+    <!-- Status Colors -->
+    <color name="status_good">#2E7D32</color>
+    <color name="status_warning">#F57C00</color>
+    <color name="status_error">#D32F2F</color>
+    <color name="status_info">#1976D2</color>
+
+    <!-- WhatsApp Brand Colors -->
+    <color name="whatsapp_green">#25D366</color>
+    <color name="whatsapp_green_dark">#128C7E</color>
+    <color name="whatsapp_teal">#34B7F1</color>
+
+    <!-- Background Colors -->
+    <color name="card_background_light">#FFFFFF</color>
+    <color name="card_background_dark">#2C2C2E</color>
+    <color name="divider_color">#E0E0E0</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary_light">#000000</color>
+    <color name="text_secondary_light">#666666</color>
+    <color name="text_primary_dark">#FFFFFF</color>
+    <color name="text_secondary_dark">#CCCCCC</color>
+</resources>

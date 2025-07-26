@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WhatsApp Digest</string>
+
+    <!-- Main Activity -->
+    <string name="main_title">WhatsApp Digest</string>
+    <string name="status_title">Status</string>
+    <string name="config_title">Configuration</string>
+
+    <!-- Status messages -->
+    <string name="status_permission_granted">Notification access granted</string>
+    <string name="status_permission_denied">Notification access required</string>
+    <string name="status_service_running">Service is running</string>
+    <string name="status_service_stopped">Service is stopped</string>
+    <string name="status_next_sync">Next sync: %1$s</string>
+    <string name="status_last_sync">Last sync: %1$s</string>
+    <string name="status_never_synced">Never synced</string>
+
+    <!-- Configuration -->
+    <string name="config_server_url">Server URL</string>
+    <string name="config_server_url_hint">https://your-server.com/api</string>
+    <string name="config_device_token">Device Token</string>
+    <string name="config_device_token_hint">Enter your device authentication token</string>
+    <string name="config_wifi_only">Sync on Wi-Fi only</string>
+    <string name="config_sync_interval">Sync interval (minutes)</string>
+
+    <!-- Buttons -->
+    <string name="btn_grant_permission">Grant Permission</string>
+    <string name="btn_open_settings">Open Settings</string>
+    <string name="btn_save_config">Save Configuration</string>
+    <string name="btn_test_connection">Test Connection</string>
+    <string name="btn_force_sync">Force Sync Now</string>
+    <string name="btn_clear_data">Clear Local Data</string>
+
+    <!-- Messages -->
+    <string name="msg_config_saved">Configuration saved</string>
+    <string name="msg_config_error">Please check your configuration</string>
+    <string name="msg_connection_success">Connection successful</string>
+    <string name="msg_connection_failed">Connection failed: %1$s</string>
+    <string name="msg_sync_started">Sync started</string>
+    <string name="msg_sync_completed">Sync completed: %1$d messages sent</string>
+    <string name="msg_sync_failed">Sync failed: %1$s</string>
+    <string name="msg_data_cleared">Local data cleared</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">WhatsApp Digest Service</string>
+    <string name="notification_channel_description">Background service for WhatsApp message collection</string>
+    <string name="notification_service_title">WhatsApp Digest</string>
+    <string name="notification_service_text">Collecting messages in background</string>
+
+    <!-- Errors -->
+    <string name="error_network">Network error occurred</string>
+    <string name="error_server">Server error: %1$s</string>
+    <string name="error_permission">Notification permission required</string>
+    <string name="error_invalid_url">Invalid server URL</string>
+    <string name="error_invalid_token">Invalid device token</string>
+
+    <!-- Privacy -->
+    <string name="privacy_notice_title">Privacy Notice</string>
+    <string name="privacy_notice_message">This app reads WhatsApp notifications to create summaries. Your messages are encrypted and only sent to your configured server. No data is shared with third parties.</string>
+    <string name="privacy_accept">I understand and accept</string>
+
+    <!-- Statistics -->
+    <string name="stats_title">Statistics</string>
+    <string name="stats_messages_collected">Messages collected: %1$d</string>
+    <string name="stats_messages_pending">Messages pending: %1$d</string>
+    <string name="stats_last_message">Last message: %1$s</string>
+    <string name="stats_storage_used">Storage used: %1$s</string>
+</resources>

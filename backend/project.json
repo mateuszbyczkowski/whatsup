@@ -1,0 +1,87 @@
+{
+  "name": "backend",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "backend/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/node:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "backend/dist",
+        "main": "backend/src/main.ts",
+        "tsConfig": "backend/tsconfig.app.json",
+        "assets": ["backend/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "backend/src/environments/environment.ts",
+              "with": "backend/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "dev": {
+      "executor": "@nx/node:execute",
+      "options": {
+        "buildTarget": "backend:build",
+        "watch": true,
+        "inspect": false
+      }
+    },
+    "start": {
+      "executor": "@nx/node:execute",
+      "options": {
+        "buildTarget": "backend:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["backend/**/*.ts"]
+      }
+    },
+    "type-check": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "tsConfig": "backend/tsconfig.app.json"
+      }
+    },
+    "migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm exec drizzle-kit migrate",
+        "cwd": "backend"
+      }
+    },
+    "migrate:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm exec drizzle-kit generate:pg",
+        "cwd": "backend"
+      }
+    },
+    "seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm exec tsx src/scripts/seed.ts",
+        "cwd": "backend"
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t whatsup-backend .",
+        "cwd": "backend"
+      }
+    }
+  },
+  "tags": ["scope:backend", "type:application"]
+}

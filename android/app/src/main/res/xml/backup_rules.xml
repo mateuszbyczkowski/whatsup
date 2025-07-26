@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Include all shared preferences first -->
+    <include domain="sharedpref" path="."/>
+    
+    <!-- Then exclude sensitive data from auto backup -->
+    <exclude domain="sharedpref" path="whadgest_secure_prefs.xml"/>
+    <exclude domain="sharedpref" path="whadgest_config.xml"/>
+    
+    <!-- Include database directory first -->
+    <include domain="database" path="."/>
+    
+    <!-- Then exclude specific database files -->
+    <exclude domain="database" path="whadgest_database"/>
+    <exclude domain="database" path="whadgest_database-shm"/>
+    <exclude domain="database" path="whadgest_database-wal"/>
+
+    <!-- Include file directory first -->
+    <include domain="file" path="."/>
+    
+    <!-- Then exclude any logs or temporary files -->
+    <exclude domain="file" path="logs/"/>
+    <exclude domain="cache"/>
+</full-backup-content>
