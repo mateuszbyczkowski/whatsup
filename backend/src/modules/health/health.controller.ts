@@ -121,7 +121,7 @@ export class HealthController {
     return { status: 'ok', timestamp: new Date().toISOString() };
   }
 
-  private async checkDatabase() {
+  private async checkDatabase(): Promise<Record<string, any>> {
     try {
       const isHealthy = await checkDatabaseHealth();
       if (!isHealthy) {
@@ -135,11 +135,11 @@ export class HealthController {
       };
     } catch (error) {
       this.logger.error('Database health check failed:', error);
-      throw new Error(`Database health check failed: ${error.message}`);
+      throw new Error(`Database health check failed: ${(error as Error).message}`);
     }
   }
 
-  private async checkRedisQueue() {
+  private async checkRedisQueue(): Promise<Record<string, any>> {
     try {
       // Check if Redis connection is working by getting queue info
       await this.summarizationQueue.getWaiting();
@@ -151,11 +151,11 @@ export class HealthController {
       };
     } catch (error) {
       this.logger.error('Redis queue health check failed:', error);
-      throw new Error(`Redis queue health check failed: ${error.message}`);
+      throw new Error(`Redis queue health check failed: ${(error as Error).message}`);
     }
   }
 
-  private async checkOpenAI() {
+  private async checkOpenAI(): Promise<Record<string, any>> {
     try {
       const isHealthy = await this.openaiService.checkHealth();
       if (!isHealthy) {
@@ -173,13 +173,13 @@ export class HealthController {
       return {
         openai: {
           status: 'degraded',
-          message: `OpenAI API check failed: ${error.message}`,
+          message: `OpenAI API check failed: ${(error as Error).message}`,
         },
       };
     }
   }
 
-  private async checkBERTModel() {
+  private async checkBERTModel(): Promise<Record<string, any>> {
     try {
       const isHealthy = await this.topicFilterService.healthCheck();
       const isInitialized = this.topicFilterService.isModelInitialized();
@@ -198,7 +198,7 @@ export class HealthController {
       return {
         bert_model: {
           status: 'degraded',
-          message: `BERT model check failed: ${error.message}`,
+          message: `BERT model check failed: ${(error as Error).message}`,
           initialized: false,
         },
       };

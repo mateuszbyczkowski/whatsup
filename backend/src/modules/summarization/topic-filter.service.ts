@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { pipeline, Pipeline } from '@xenova/transformers';
+import { pipeline } from '@xenova/transformers';
 import { environment } from '@/environments/environment';
 
 export interface TopicClassificationResult {
@@ -10,7 +10,7 @@ export interface TopicClassificationResult {
 @Injectable()
 export class TopicFilterService implements OnModuleInit {
   private readonly logger = new Logger(TopicFilterService.name);
-  private classificationPipeline: Pipeline | null = null;
+  private classificationPipeline: any = null;
   private isInitialized = false;
 
   async onModuleInit() {
