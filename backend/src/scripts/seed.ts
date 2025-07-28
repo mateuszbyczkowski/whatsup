@@ -2,7 +2,12 @@ import { createHash } from 'crypto';
 import { db, pool } from '../database/connection';
 import { devices } from '../database/schema';
 import { eq } from 'drizzle-orm';
-import { environment } from '../environments/environment';
+let environment;
+if (process.env.NODE_ENV === 'production') {
+  environment = require('../environments/environment.prod').environment;
+} else {
+  environment = require('../environments/environment').environment;
+}
 
 async function seedDatabase() {
   console.log('🌱 Starting database seeding...');

@@ -2,7 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import { LoggerModule } from 'nestjs-pino';
-import { environment } from './environments/environment';
+let environment;
+if (process.env.NODE_ENV === 'production') {
+  environment = require('./environments/environment.prod').environment;
+} else {
+  environment = require('./environments/environment').environment;
+}
 import appConfig from './config/app.config';
 
 // Import modules
