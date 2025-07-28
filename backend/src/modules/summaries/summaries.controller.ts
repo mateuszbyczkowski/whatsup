@@ -8,6 +8,8 @@ import {
   HttpStatus,
   Logger,
   BadRequestException,
+  Post,
+  Body,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -16,6 +18,7 @@ import {
   ApiBearerAuth,
   ApiParam,
   ApiQuery,
+  ApiBody,
 } from '@nestjs/swagger';
 import { SummariesService } from './summaries.service';
 import { DeviceAuthGuard } from '@/shared/auth.guard';
@@ -164,5 +167,31 @@ export class SummariesController {
 
     // Default to JSON format
     return await this.summariesService.getSummariesForChat(chatId, device.id, query);
+  }
+
+  @Post('trigger')
+  @HttpCode(HttpStatus.ACCEPTED)
+  @ApiOperation({
+    summary: 'Manually trigger summarization for the authenticated device',
+    description: 'Triggers summarization for all chats with messages for the authenticated device. Optionally, provide chatId in body to trigger for a specific chat only.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        chatId: { type: 'string', description: 'Chat identifier (optional)' },
+      },
+    },
+    required: false,
+  })
+  @ApiResponse({ status: 202, description: 'Summarization triggered' })
+  @ApiResponse({ status: 401, description: 'Invalid or missing device token' })
+  async triggerSummarization(
+    @CurrentDevice() device: Device,
+    @Body() body: { chatId?: string }
+  ): Promise<{ status: string; chatId?: string }> {
+    this.logger.log(`Triggering summarization for device ${device.id}${body?.chatId ? ', chat ' + body.chatId : ''}`);
+    await this.summariesService.triggerSummarization(device.id, body?.chatId);
+    return { status: 'summarization triggered', chatId: body?.chatId };
   }
 }

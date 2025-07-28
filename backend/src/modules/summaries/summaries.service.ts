@@ -1,4 +1,6 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, Inject } from '@nestjs/common';
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 import { db } from '@/database/connection';
 import { summaries, messages, devices } from '@/database/schema';
 import { eq, and, gte, lte, desc, sql, count } from 'drizzle-orm';
@@ -14,6 +16,10 @@ import {
 @Injectable()
 export class SummariesService {
   private readonly logger = new Logger(SummariesService.name);
+
+  constructor(
+    @InjectQueue('summarization') private readonly summarizationQueue: Queue,
+  ) {}
 
   async getSummariesForChat(
     chatId: string,
@@ -141,30 +147,10 @@ export class SummariesService {
   }
 
   async getAvailableChats(deviceId: string): Promise<GetChatsResponseDto> {
-    this.logger.log(`Getting available chats for device ${deviceId}`);
+    this.logger.log(`Getting all chats with messages for device ${deviceId}`);
 
     try {
-      // Get chat statistics by joining summaries with messages
-      const chatStats = await db
-        .select({
-          chatId: summaries.chatId,
-          summaryCount: count(summaries.id),
-          lastSummaryAt: sql<Date>`MAX(${summaries.createdAt})`,
-          firstSummaryAt: sql<Date>`MIN(${summaries.createdAt})`,
-        })
-        .from(summaries)
-        .where(
-          // Only include chats that have messages from this device
-          sql`${summaries.chatId} IN (
-            SELECT DISTINCT ${messages.chatId}
-            FROM ${messages}
-            WHERE ${messages.deviceId} = ${deviceId}
-          )`
-        )
-        .groupBy(summaries.chatId)
-        .orderBy(desc(sql`MAX(${summaries.createdAt})`));
-
-      // Get message counts for each chat
+      // Get all chats with messages for the device
       const chatMessageCounts = await db
         .select({
           chatId: messages.chatId,
@@ -174,18 +160,33 @@ export class SummariesService {
         .where(eq(messages.deviceId, deviceId))
         .groupBy(messages.chatId);
 
-      // Combine the data
-      const chats: ChatListDto[] = chatStats.map(stat => {
-        const messageCount = chatMessageCounts.find(
-          mc => mc.chatId === stat.chatId
-        )?.totalMessages || 0;
+      // For each chat, check if there is at least one summary
+      const chatSummaries = await db
+        .select({
+          chatId: summaries.chatId,
+          summaryCount: count(summaries.id),
+          lastSummaryAt: sql<Date>`MAX(${summaries.createdAt})`,
+          firstSummaryAt: sql<Date>`MIN(${summaries.createdAt})`,
+        })
+        .from(summaries)
+        .where(
+          sql`${summaries.chatId} IN (
+            SELECT DISTINCT ${messages.chatId}
+            FROM ${messages}
+            WHERE ${messages.deviceId} = ${deviceId}
+          )`
+        )
+        .groupBy(summaries.chatId);
 
+      // Combine the data
+      const chats: ChatListDto[] = chatMessageCounts.map(mc => {
+        const summary = chatSummaries.find(cs => cs.chatId === mc.chatId);
         return {
-          chatId: stat.chatId,
-          summaryCount: stat.summaryCount,
-          lastSummaryAt: stat.lastSummaryAt.toISOString(),
-          firstSummaryAt: stat.firstSummaryAt.toISOString(),
-          totalMessages: messageCount,
+          chatId: mc.chatId,
+          totalMessages: mc.totalMessages,
+          summaryCount: summary ? summary.summaryCount : 0,
+          lastSummaryAt: summary && summary.lastSummaryAt ? summary.lastSummaryAt.toISOString() : undefined,
+          firstSummaryAt: summary && summary.firstSummaryAt ? summary.firstSummaryAt.toISOString() : undefined,
         };
       });
 
@@ -195,7 +196,7 @@ export class SummariesService {
         timestamp: Date.now(),
       };
 
-      this.logger.log(`Found ${chats.length} chats with summaries for device ${deviceId}`);
+      this.logger.log(`Found ${chats.length} chats with messages for device ${deviceId}`);
       return response;
 
     } catch (error) {
@@ -334,6 +335,49 @@ export class SummariesService {
     } catch (error) {
       this.logger.error(`Failed to get summary stats for device ${deviceId}:`, error);
       throw error;
+    }
+  }
+
+  /**
+   * Manually trigger summarization for a device and optionally a specific chat.
+   * This is a stub; implement your summarization logic here.
+   */
+  async triggerSummarization(deviceId: string, chatId?: string): Promise<void> {
+    this.logger.log(`Manual summarization trigger for device ${deviceId}${chatId ? ', chat ' + chatId : ''}`);
+
+    // Get all chats with unprocessed messages for the device
+    let chats: { chatId: string }[] = [];
+    if (chatId) {
+      chats = [{ chatId }];
+    } else {
+      chats = await db
+        .select({ chatId: messages.chatId })
+        .from(messages)
+        .where(and(eq(messages.deviceId, deviceId), eq(messages.isProcessed, false)))
+        .groupBy(messages.chatId);
+    }
+
+    for (const chat of chats) {
+      // Find the earliest and latest unprocessed message timestamps for the chat
+      const [window] = await db
+        .select({
+          windowStart: sql`MIN(${messages.tsOriginal})`,
+          windowEnd: sql`MAX(${messages.tsOriginal})`,
+        })
+        .from(messages)
+        .where(and(eq(messages.deviceId, deviceId), eq(messages.chatId, chat.chatId), eq(messages.isProcessed, false)));
+
+      if (!window || !window.windowStart || !window.windowEnd) {
+        this.logger.log(`No unprocessed messages for chat ${chat.chatId}`);
+        continue;
+      }
+
+      await this.summarizationQueue.add('summarize', {
+        chatId: chat.chatId,
+        windowStart: window.windowStart,
+        windowEnd: window.windowEnd,
+      });
+      this.logger.log(`Enqueued summarization job for chat ${chat.chatId} (${window.windowStart} - ${window.windowEnd})`);
     }
   }
 }

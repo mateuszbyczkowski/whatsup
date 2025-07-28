@@ -64,6 +64,8 @@ export class MessagesController {
       `Ingest request from device ${device.id}: ${ingestRequest.events.length} messages`
     );
 
+    this.logger.log(`Received ingest request for device ${device.id}`);
+    this.logger.log(JSON.stringify(ingestRequest))
     return await this.messagesService.ingestMessages(ingestRequest, device);
   }
 }

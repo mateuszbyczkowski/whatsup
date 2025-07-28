@@ -121,6 +121,9 @@ class ApiClient private constructor(
      * Ingest events to backend
      */
     suspend fun ingestEvents(request: IngestRequest): Response<IngestResponse> {
+        val gson = Gson()
+        val json = gson.toJson(request)
+        Log.i("PAYLOAD", json);
         return try {
             Log.d(TAG, "Ingesting ${request.events.size} events to backend")
             apiService.ingestEvents(request)
