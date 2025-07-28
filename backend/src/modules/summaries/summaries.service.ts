@@ -1,16 +1,16 @@
-import { Injectable, Logger, NotFoundException, Inject } from '@nestjs/common';
-import { Queue } from 'bullmq';
-import { InjectQueue } from '@nestjs/bullmq';
-import { db } from '@/database/connection';
-import { summaries, messages, devices } from '@/database/schema';
-import { eq, and, gte, lte, desc, sql, count } from 'drizzle-orm';
+import {Injectable, Logger, NotFoundException} from '@nestjs/common';
+import {Queue} from 'bullmq';
+import {InjectQueue} from '@nestjs/bullmq';
+import {db} from '@/database/connection';
+import {messages, summaries} from '@/database/schema';
+import {and, count, desc, eq, gte, lte, sql} from 'drizzle-orm';
 import {
-  GetSummaryQueryDto,
-  SummaryDto,
-  GetSummariesResponseDto,
-  GetSummaryMarkdownResponseDto,
   ChatListDto,
   GetChatsResponseDto,
+  GetSummariesResponseDto,
+  GetSummaryMarkdownResponseDto,
+  GetSummaryQueryDto,
+  SummaryDto,
 } from './dto/summary.dto';
 
 @Injectable()
@@ -128,7 +128,7 @@ export class SummariesService {
     const periodEnd = query.to || newestSummary.periodEnd;
     const timeSpan = this.calculateTimeSpan(new Date(periodStart), new Date(periodEnd));
 
-    const response: GetSummaryMarkdownResponseDto = {
+    return {
       markdown,
       chatId,
       period: {
@@ -142,8 +142,6 @@ export class SummariesService {
       },
       timestamp: Date.now(),
     };
-
-    return response;
   }
 
   async getAvailableChats(deviceId: string): Promise<GetChatsResponseDto> {
@@ -346,7 +344,7 @@ export class SummariesService {
     this.logger.log(`Manual summarization trigger for device ${deviceId}${chatId ? ', chat ' + chatId : ''}`);
 
     // Get all chats with unprocessed messages for the device
-    let chats: { chatId: string }[] = [];
+    let chats: { chatId: string }[];
     if (chatId) {
       chats = [{ chatId }];
     } else {
