@@ -158,6 +158,12 @@ export class SummariesService {
         .where(eq(messages.deviceId, deviceId))
         .groupBy(messages.chatId);
 
+
+      this.logger.log(`Raw chatMessageCounts for device ${deviceId}: ${JSON.stringify(chatMessageCounts)}`);
+      if (!chatMessageCounts || chatMessageCounts.length === 0) {
+        this.logger.warn(`No chats with messages found for device ${deviceId}`);
+      }
+
       // For each chat, check if there is at least one summary
       const chatSummaries = await db
         .select({
@@ -175,6 +181,9 @@ export class SummariesService {
           )`
         )
         .groupBy(summaries.chatId);
+
+
+      this.logger.log(`Raw chatSummaries for device ${deviceId}: ${JSON.stringify(chatSummaries)}`);
 
       // Combine the data
       const chats: ChatListDto[] = chatMessageCounts.map(mc => {
@@ -195,6 +204,9 @@ export class SummariesService {
       };
 
       this.logger.log(`Found ${chats.length} chats with messages for device ${deviceId}`);
+      if (chats.length === 0) {
+        this.logger.warn(`No chats returned in response for device ${deviceId}`);
+      }
       return response;
 
     } catch (error) {
